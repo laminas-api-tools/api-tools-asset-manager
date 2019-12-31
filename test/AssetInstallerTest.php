@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @link      http://github.com/zfcampus/zf-asset-manager for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
+ * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZFTest\AssetManager;
+namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
@@ -13,23 +14,23 @@ use Composer\Installer\InstallationManager;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Laminas\ApiTools\AssetManager\AssetInstaller;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\AssetManager\AssetInstaller;
 
 class AssetInstallerTest extends TestCase
 {
     protected $expectedAssets = [
-        'zf-apigility/css/styles.css',
-        'zf-apigility/img/favicon.ico',
-        'zf-apigility/js/scripts.js',
-        'zf-barbaz/css/styles.css',
-        'zf-barbaz/img/favicon.ico',
-        'zf-barbaz/js/scripts.js',
-        'zf-foobar/images/favicon.ico',
-        'zf-foobar/scripts/scripts.js',
-        'zf-foobar/styles/styles.css',
+        'api-tools/css/styles.css',
+        'api-tools/img/favicon.ico',
+        'api-tools/js/scripts.js',
+        'api-tools-barbaz/css/styles.css',
+        'api-tools-barbaz/img/favicon.ico',
+        'api-tools-barbaz/js/scripts.js',
+        'api-tools-foobar/images/favicon.ico',
+        'api-tools-foobar/scripts/scripts.js',
+        'api-tools-foobar/styles/styles.css',
     ];
 
     public function setUp()
@@ -172,8 +173,8 @@ class AssetInstallerTest extends TestCase
         $gitIgnoreFile = vfsStream::url('project/public/.gitignore');
         $this->assertFileExists($gitIgnoreFile, 'public/.gitignore was not created');
         $contents = file_get_contents($gitIgnoreFile);
-        $this->assertContains("\nzf-apigility", $contents, 'public/.gitignore is missing the zf-apigility/ entry');
-        $this->assertContains("\nzf-barbaz/", $contents, 'public/.gitignore is missing the zf-barbaz/ entry');
-        $this->assertContains("\nzf-foobar/", $contents, 'public/.gitignore is missing the zf-foobar/ entry');
+        $this->assertContains("\napi-tools", $contents, 'public/.gitignore is missing the api-tools/ entry');
+        $this->assertContains("\napi-tools-barbaz/", $contents, 'public/.gitignore is missing the api-tools-barbaz/ entry');
+        $this->assertContains("\napi-tools-foobar/", $contents, 'public/.gitignore is missing the api-tools-foobar/ entry');
     }
 }
