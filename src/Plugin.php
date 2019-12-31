@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @link      http://github.com/zfcampus/zf-asset-manager for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
+ * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZF\AssetManager;
+namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
