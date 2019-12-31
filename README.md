@@ -1,9 +1,9 @@
-# zf-asset-manager
+# api-tools-asset-manager
 
-[![Build Status](https://travis-ci.org/zfcampus/zf-asset-manager.png)](https://travis-ci.org/zfcampus/zf-asset-manager)
+[![Build Status](https://travis-ci.org/laminas-api-tools/api-tools-asset-manager.png)](https://travis-ci.org/laminas-api-tools/api-tools-asset-manager)
 
-zf-asset-manager is a composer plugin that will copy configured web-accessible
-assets into the public document root of your Zend Framework application. It uses
+api-tools-asset-manager is a composer plugin that will copy configured web-accessible
+assets into the public document root of your Laminas application. It uses
 the configuration format of [rwoverdijk/AssetManager](https://github.com/rwoverdijk/AssetManager),
 and specifically the subset:
 
@@ -23,7 +23,7 @@ the public tree.
 ## Installation
 
 ```bash
-$ composer require --dev zfcampus/zf-asset-manager
+$ composer require --dev laminas-api-tools/api-tools-asset-manager
 ```
 
 > ### Recommended for development
@@ -44,7 +44,7 @@ As an example, given the following directory structure inside a package:
   - README.md
   - gruntfile.js
   - package.json
-  - zf-apigility/
+  - api-tools/
     - css/
       - bootstrap.min.css
     - img/
@@ -52,7 +52,7 @@ As an example, given the following directory structure inside a package:
     - js/
       - bootstrap.min.js
       - jquery.min.js
-  - zf-apigility-welcome/
+  - api-tools-welcome/
     - css/
       - main.min.css
     - img/
@@ -76,7 +76,7 @@ return [
 ```
 
 When you install the package, the asset manager will copy each of the
-`asset/zf-apigility/` and `asset/zf-apigility-welcome/` trees to the project's
+`asset/api-tools/` and `asset/api-tools-welcome/` trees to the project's
 `public/` path. The individual files `asset/README.md`, `asset/gruntfile.js`, and
 `asset/package.json` are omitted from the install, as they are not directories.
 
@@ -85,8 +85,8 @@ Additionally, during installation, the plugin adds a `.gitignore` file to the
 
 ```text
 # public/.gitignore
-zf-apigility/
-zf-apigility-welcome/
+api-tools/
+api-tools-welcome/
 ```
 
 After installation, you may access any of the assets installed relative to the
