@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @link      http://github.com/zfcampus/zf-asset-manager for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
+ * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZFTest\AssetManager;
+namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\UpdateOperation;
@@ -16,11 +17,11 @@ use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Repository\CompositeRepository;
+use Laminas\ApiTools\AssetManager\Plugin;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
-use ZF\AssetManager\Plugin;
 
 class PluginTest extends TestCase
 {
