@@ -1,11 +1,12 @@
 <?php
+
 /**
- * @link      http://github.com/zfcampus/zf-asset-manager for the canonical source repository
- * @copyright Copyright (c) 2016 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd New BSD License
+ * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
+ * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
+ * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
  */
 
-namespace ZFTest\AssetManager;
+namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\UninstallOperation;
@@ -13,28 +14,28 @@ use Composer\Installer\InstallationManager;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Laminas\ApiTools\AssetManager\AssetUninstaller;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit_Framework_TestCase as TestCase;
-use ZF\AssetManager\AssetUninstaller;
 
 class AssetUninstallerTest extends TestCase
 {
     protected $installedAssets = [
-        'public/zf-apigility/css/styles.css',
-        'public/zf-apigility/img/favicon.ico',
-        'public/zf-apigility/js/scripts.js',
-        'public/zf-barbaz/css/styles.css',
-        'public/zf-barbaz/img/favicon.ico',
-        'public/zf-barbaz/js/scripts.js',
-        'public/zf-foobar/images/favicon.ico',
-        'public/zf-foobar/scripts/scripts.js',
-        'public/zf-foobar/styles/styles.css',
+        'public/api-tools/css/styles.css',
+        'public/api-tools/img/favicon.ico',
+        'public/api-tools/js/scripts.js',
+        'public/api-tools-barbaz/css/styles.css',
+        'public/api-tools-barbaz/img/favicon.ico',
+        'public/api-tools-barbaz/js/scripts.js',
+        'public/api-tools-foobar/images/favicon.ico',
+        'public/api-tools-foobar/scripts/scripts.js',
+        'public/api-tools-foobar/styles/styles.css',
     ];
 
     protected $structure = [
         'public' => [
-            'zf-apigility' => [
+            'api-tools' => [
                 'css' => [
                     'styles.css' => '',
                 ],
@@ -45,7 +46,7 @@ class AssetUninstallerTest extends TestCase
                     'scripts.js' => '',
                 ],
             ],
-            'zf-barbaz' => [
+            'api-tools-barbaz' => [
                 'css' => [
                     'styles.css' => '',
                 ],
@@ -56,7 +57,7 @@ class AssetUninstallerTest extends TestCase
                     'scripts.js' => '',
                 ],
             ],
-            'zf-foobar' => [
+            'api-tools-foobar' => [
                 'images' => [
                     'favicon.ico' => '',
                 ],
@@ -216,7 +217,7 @@ class AssetUninstallerTest extends TestCase
 
         // Seeding the .gitignore happens after createUninstaller, as that
         // seeds an empty file by default.
-        $gitignore = "\nzf-apigility/\nzf-barbaz/\nzf-foobar/";
+        $gitignore = "\napi-tools/\napi-tools-barbaz/\napi-tools-foobar/";
         file_put_contents(
             vfsStream::url('project/public/.gitignore'),
             $gitignore
@@ -242,7 +243,7 @@ class AssetUninstallerTest extends TestCase
 
         // Seeding the .gitignore happens after createUninstaller, as that
         // seeds an empty file by default.
-        $gitignore = "\nzf-apigility/\nzf-barbaz/\nzf-foobar/";
+        $gitignore = "\napi-tools/\napi-tools-barbaz/\napi-tools-foobar/";
         file_put_contents(
             vfsStream::url('project/public/.gitignore'),
             $gitignore
@@ -273,7 +274,7 @@ class AssetUninstallerTest extends TestCase
 
         // Seeding the .gitignore happens after createUninstaller, as that
         // seeds an empty file by default.
-        $gitignore = "\nzf-barbaz/\nzf-foobar/";
+        $gitignore = "\napi-tools-barbaz/\napi-tools-foobar/";
         file_put_contents(
             vfsStream::url('project/public/.gitignore'),
             $gitignore
@@ -285,12 +286,12 @@ class AssetUninstallerTest extends TestCase
             $path = sprintf('%s/%s', vfsStream::url('project'), $asset);
 
             switch (true) {
-                case preg_match('#/zf-apigility/#', $asset):
+                case preg_match('#/api-tools/#', $asset):
                     $this->assertFileExists($path, sprintf('Expected file "%s"; not found', $path));
                     break;
-                case preg_match('#/zf-barbaz/#', $asset):
+                case preg_match('#/api-tools-barbaz/#', $asset):
                     // fall-through
-                case preg_match('#/zf-foobar/#', $asset):
+                case preg_match('#/api-tools-foobar/#', $asset):
                     // fall-through
                 default:
                     $this->assertFileNotExists(
