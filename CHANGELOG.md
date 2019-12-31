@@ -28,12 +28,12 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#6](https://github.com/zfcampus/zf-asset-manager/pull/6) adds support for
+- [zfcampus/zf-asset-manager#6](https://github.com/zfcampus/zf-asset-manager/pull/6) adds support for
   PHP 7.1 and 7.2.
 
 ### Changed
 
-- [#5](https://github.com/zfcampus/zf-asset-manager/pull/5) changes a number of
+- [zfcampus/zf-asset-manager#5](https://github.com/zfcampus/zf-asset-manager/pull/5) changes a number of
   internals:
 
   - Install and uninstall operations check for `asset_manager` configuration
@@ -61,7 +61,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Removed
 
-- [#6](https://github.com/zfcampus/zf-asset-manager/pull/6) removes support for
+- [zfcampus/zf-asset-manager#6](https://github.com/zfcampus/zf-asset-manager/pull/6) removes support for
   HHVM.
 
 ### Fixed
@@ -84,7 +84,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#3](https://github.com/zfcampus/zf-asset-manager/pull/3) fixes the
+- [zfcampus/zf-asset-manager#3](https://github.com/zfcampus/zf-asset-manager/pull/3) fixes the
   `onPostPackageUpdate()` logic to pull both the initial and target package from
   the `UpdateOperation` composed in the `PackageEvent`, and to create
   new `PackageEvent` instances containing appropriate `UninstallOperation` and
@@ -94,7 +94,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#2](https://github.com/zfcampus/zf-asset-manager/pull/2) adds a
+- [zfcampus/zf-asset-manager#2](https://github.com/zfcampus/zf-asset-manager/pull/2) adds a
   post-package-update event handler that uninstalls assets for the package, and
   then installs any defined in the new package version. This feature will allow
   seamless updating of assets as they are updated in package dependencies.
@@ -127,7 +127,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#1](https://github.com/zfcampus/zf-asset-manager/pull/1) fixes how the
+- [zfcampus/zf-asset-manager#1](https://github.com/zfcampus/zf-asset-manager/pull/1) fixes how the
   `public/.gitignore` file is populated, ensuring no duplicates are created.
 
 ## 1.0.0 - 2016-07-26
