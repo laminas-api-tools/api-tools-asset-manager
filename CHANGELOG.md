@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- [#2](https://github.com/zfcampus/zf-asset-manager/pull/2) adds a
+- [zfcampus/zf-asset-manager#2](https://github.com/zfcampus/zf-asset-manager/pull/2) adds a
   post-package-update event handler that uninstalls assets for the package, and
   then installs any defined in the new package version. This feature will allow
   seamless updating of assets as they are updated in package dependencies.
@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#1](https://github.com/zfcampus/zf-asset-manager/pull/1) fixes how the
+- [zfcampus/zf-asset-manager#1](https://github.com/zfcampus/zf-asset-manager/pull/1) fixes how the
   `public/.gitignore` file is populated, ensuring no duplicates are created.
 
 ## 1.0.0 - 2016-07-26
