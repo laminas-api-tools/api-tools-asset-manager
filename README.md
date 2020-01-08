@@ -1,6 +1,6 @@
 # api-tools-asset-manager
 
-[![Build Status](https://travis-ci.org/laminas-api-tools/api-tools-asset-manager.png)](https://travis-ci.org/laminas-api-tools/api-tools-asset-manager)
+[![Build Status](https://travis-ci.com/laminas-api-tools/api-tools-asset-manager.png)](https://travis-ci.com/laminas-api-tools/api-tools-asset-manager)
 
 api-tools-asset-manager is a composer plugin that will copy configured web-accessible
 assets into the public document root of your Laminas application. It uses
