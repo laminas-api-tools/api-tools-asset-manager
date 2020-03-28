@@ -55,6 +55,6 @@
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
     "replace": {
-        "zfcampus/zf-asset-manager": "self.version"
+        "zfcampus/zf-asset-manager": "^1.2.0"
     }
 }
