@@ -176,8 +176,16 @@ class AssetInstallerTest extends TestCase
         $this->assertFileExists($gitIgnoreFile, 'public/.gitignore was not created');
         $contents = file_get_contents($gitIgnoreFile);
         $this->assertContains("\napi-tools", $contents, 'public/.gitignore is missing the api-tools/ entry');
-        $this->assertContains("\napi-tools-barbaz/", $contents, 'public/.gitignore is missing the api-tools-barbaz/ entry');
-        $this->assertContains("\napi-tools-foobar/", $contents, 'public/.gitignore is missing the api-tools-foobar/ entry');
+        $this->assertContains(
+            "\napi-tools-barbaz/",
+            $contents,
+            'public/.gitignore is missing the api-tools-barbaz/ entry'
+        );
+        $this->assertContains(
+            "\napi-tools-foobar/",
+            $contents,
+            'public/.gitignore is missing the api-tools-foobar/ entry'
+        );
     }
 
     public function testInstallerDoesNotAddDuplicateEntriesToGitignore()
