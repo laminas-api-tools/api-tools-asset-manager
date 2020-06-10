@@ -101,7 +101,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $operation = $event->getOperation();
         $targetPackage = $operation->getTargetPackage();
 
-        // Install new assets; delay until post-autoload-update
+        // Install new assets; delay until post-autoload-dump
         $this->installers[] = function () use ($event, $operation, $targetPackage) {
             $installer = new AssetInstaller($this->composer, $this->io);
             $installer($this->createPackageEventWithOperation(
