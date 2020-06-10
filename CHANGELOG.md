@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Added
 
-- Nothing.
+- [#3](https://github.com/laminas-api-tools/api-tools-asset-manager/pull/3) Added support for composer 2.0
 
 ### Changed
 
