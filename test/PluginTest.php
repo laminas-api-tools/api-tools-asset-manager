@@ -9,6 +9,8 @@
 namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\DependencyResolver\PolicyInterface;
 use Composer\DependencyResolver\Pool;
@@ -25,6 +27,22 @@ use ReflectionProperty;
 
 class PluginTest extends TestCase
 {
+
+    /**
+     * @var vfsStreamDirectory
+     */
+    private $filesystem;
+
+    /**
+     * @var Composer|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $composer;
+
+    /**
+     * @var IOInterface|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $io;
+
     public function setUp()
     {
         // Create virtual filesystem
@@ -50,8 +68,13 @@ class PluginTest extends TestCase
         $plugin = new Plugin();
         $this->assertNull($plugin->activate($this->composer->reveal(), $this->io->reveal()));
 
-        $installEvent = $this->prophesize(PackageEvent::class)->reveal();
-        $this->assertNull($plugin->onPostPackageInstall($installEvent));
+        $installEvent = $this->prophesize(PackageEvent::class);
+        $operation = $this->prophesize(InstallOperation::class);
+        $package = $this->prophesize(PackageInterface::class);
+        $operation->getPackage()->will([$package, 'reveal'])->shouldBeCalled();
+
+        $installEvent->getOperation()->will([$operation, 'reveal'])->shouldBeCalled();
+        $this->assertNull($plugin->onPostPackageInstall($installEvent->reveal()));
         $this->assertAttributeCount(1, 'installers', $plugin);
     }
 
@@ -116,7 +139,10 @@ class PluginTest extends TestCase
         vfsStream::newFile('public/.gitignore')->at($this->filesystem);
 
         $event = $this->prophesize(PackageEvent::class);
-        $event->getOperation()->shouldNotBeCalled();
+        $operation = $this->prophesize(UninstallOperation::class);
+        $event->getOperation()->willReturn($operation)->shouldBeCalled();
+        $package = $this->prophesize(PackageInterface::class);
+        $operation->getPackage()->willReturn($package)->shouldBeCalled();
 
         return $event->reveal();
     }
@@ -128,26 +154,12 @@ class PluginTest extends TestCase
         $operation = $this->prophesize(UpdateOperation::class);
         $operation->getInitialPackage()->shouldNotBeCalled();
         $operation->getTargetPackage()->will([$targetPackage, 'reveal']);
-        $operation->getReason()->willReturn('update');
-
-        $policy = $this->prophesize(PolicyInterface::class);
-        $pool = $this->prophesize(Pool::class);
-        $repo = $this->prophesize(CompositeRepository::class);
-        $request = $this->prophesize(Request::class);
 
         $event = $this->prophesize(PackageEvent::class);
         $event
             ->getOperation()
             ->will([$operation, 'reveal'])
             ->shouldBeCalled();
-
-        $event->getName()->willReturn('post-package-update');
-        $event->isDevMode()->willReturn(true);
-        $event->getPolicy()->will([$policy, 'reveal']);
-        $event->getPool()->will([$pool, 'reveal']);
-        $event->getInstalledRepo()->will([$repo, 'reveal']);
-        $event->getRequest()->will([$request, 'reveal']);
-        $event->getOperations()->willReturn([]);
 
         return $event->reveal();
     }
@@ -159,26 +171,12 @@ class PluginTest extends TestCase
         $operation = $this->prophesize(UpdateOperation::class);
         $operation->getInitialPackage()->will([$initialPackage, 'reveal']);
         $operation->getTargetPackage()->shouldNotBeCalled();
-        $operation->getReason()->willReturn('update');
-
-        $policy = $this->prophesize(PolicyInterface::class);
-        $pool = $this->prophesize(Pool::class);
-        $repo = $this->prophesize(CompositeRepository::class);
-        $request = $this->prophesize(Request::class);
 
         $event = $this->prophesize(PackageEvent::class);
         $event
             ->getOperation()
             ->will([$operation, 'reveal'])
             ->shouldBeCalled();
-
-        $event->getName()->willReturn('post-package-update');
-        $event->isDevMode()->willReturn(true);
-        $event->getPolicy()->will([$policy, 'reveal']);
-        $event->getPool()->will([$pool, 'reveal']);
-        $event->getInstalledRepo()->will([$repo, 'reveal']);
-        $event->getRequest()->will([$request, 'reveal']);
-        $event->getOperations()->willReturn([]);
 
         return $event->reveal();
     }

@@ -71,6 +71,21 @@ class AssetUninstallerTest extends TestCase
         ],
     ];
 
+    /**
+     * @var \org\bovigo\vfs\vfsStreamDirectory
+     */
+    private $filesystem;
+
+    /**
+     * @var PackageInterface|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $package;
+
+    /**
+     * @var IOInterface|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $io;
+
     public function setUp()
     {
         // Create virtual filesystem
@@ -98,18 +113,6 @@ class AssetUninstallerTest extends TestCase
         $composer
             ->getInstallationManager()
             ->will([$installationManager, 'reveal'])
-            ->shouldBeCalled();
-
-        $operation = $this->prophesize(UninstallOperation::class);
-        $operation
-            ->getPackage()
-            ->will([$this->package, 'reveal'])
-            ->shouldBeCalled();
-
-        $this->event = $this->prophesize(PackageEvent::class);
-        $this->event
-            ->getOperation()
-            ->will([$operation, 'reveal'])
             ->shouldBeCalled();
 
         $this->io = $this->prophesize(IOInterface::class);
@@ -145,10 +148,8 @@ class AssetUninstallerTest extends TestCase
         );
         $uninstaller->setProjectPath(vfsStream::url('project'));
 
-        $event = $this->prophesize(PackageEvent::class);
-        $event->getOperation()->shouldNotBeCalled();
-
-        $this->assertNull($uninstaller($event->reveal()));
+        $package = $this->prophesize(PackageInterface::class);
+        $this->assertNull($uninstaller($package->reveal()));
     }
 
     public function testUninstallerAbortsIfNoPublicGitignoreFileFound()
@@ -164,10 +165,9 @@ class AssetUninstallerTest extends TestCase
         );
         $uninstaller->setProjectPath(vfsStream::url('project'));
 
-        $event = $this->prophesize(PackageEvent::class);
-        $event->getOperation()->shouldNotBeCalled();
+        $package = $this->prophesize(PackageInterface::class);
 
-        $this->assertNull($uninstaller($event->reveal()));
+        $this->assertNull($uninstaller($package->reveal()));
     }
 
     public function testUninstallerAbortsIfPackageDoesNotHaveConfiguration()
@@ -178,7 +178,7 @@ class AssetUninstallerTest extends TestCase
         $uninstaller = $this->createUninstaller();
         $uninstaller->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         foreach ($this->installedAssets as $asset) {
             $path = vfsStream::url('project/', $asset);
@@ -198,7 +198,7 @@ class AssetUninstallerTest extends TestCase
         $uninstaller = $this->createUninstaller();
         $uninstaller->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         foreach ($this->installedAssets as $asset) {
             $path = vfsStream::url('project/', $asset);
@@ -225,7 +225,7 @@ class AssetUninstallerTest extends TestCase
             $gitignore
         );
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         $test = file_get_contents(vfsStream::url('project/public/.gitignore'));
         $this->assertEquals($gitignore, $test);
@@ -251,7 +251,7 @@ class AssetUninstallerTest extends TestCase
             $gitignore
         );
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         foreach ($this->installedAssets as $asset) {
             $path = sprintf('%s/%s', vfsStream::url('project'), $asset);
@@ -282,7 +282,7 @@ class AssetUninstallerTest extends TestCase
             $gitignore
         );
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         foreach ($this->installedAssets as $asset) {
             $path = sprintf('%s/%s', vfsStream::url('project'), $asset);
@@ -337,7 +337,7 @@ class AssetUninstallerTest extends TestCase
             )
             ->shouldBeCalled();
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         foreach ($this->installedAssets as $asset) {
             $path = vfsStream::url('project/', $asset);
@@ -375,7 +375,7 @@ class AssetUninstallerTest extends TestCase
         $uninstaller = $this->createUninstaller();
         $uninstaller->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($uninstaller($this->event->reveal()));
+        $this->assertNull($uninstaller($this->package->reveal()));
 
         foreach ($this->installedAssets as $asset) {
             $path = vfsStream::url('project/', $asset);

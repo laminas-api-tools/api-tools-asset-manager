@@ -33,6 +33,21 @@ class AssetInstallerTest extends TestCase
         'api-tools-foobar/styles/styles.css',
     ];
 
+    /**
+     * @var PackageInterface|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $package;
+
+    /**
+     * @var IOInterface|\Prophecy\Prophecy\ObjectProphecy
+     */
+    private $io;
+
+    /**
+     * @var \org\bovigo\vfs\vfsStreamDirectory
+     */
+    private $filesystem;
+
     public function setUp()
     {
         // Create virtual filesystem
@@ -53,18 +68,6 @@ class AssetInstallerTest extends TestCase
         $composer
             ->getInstallationManager()
             ->will([$installationManager, 'reveal'])
-            ->shouldBeCalled();
-
-        $operation = $this->prophesize(InstallOperation::class);
-        $operation
-            ->getPackage()
-            ->will([$this->package, 'reveal'])
-            ->shouldBeCalled();
-
-        $this->event = $this->prophesize(PackageEvent::class);
-        $this->event
-            ->getOperation()
-            ->will([$operation, 'reveal'])
             ->shouldBeCalled();
 
         $this->io = $this->prophesize(IOInterface::class);
@@ -100,10 +103,9 @@ class AssetInstallerTest extends TestCase
         );
         $installer->setProjectPath(vfsStream::url('project'));
 
-        $event = $this->prophesize(PackageEvent::class);
-        $event->getOperation()->shouldNotBeCalled();
+        $package = $this->prophesize(PackageInterface::class);
 
-        $this->assertNull($installer($event->reveal()));
+        $this->assertNull($installer($package->reveal()));
     }
 
     public function testInstallerAbortsIfPackageDoesNotHaveConfiguration()
@@ -113,7 +115,7 @@ class AssetInstallerTest extends TestCase
         $installer = $this->createInstaller();
         $installer->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
@@ -132,7 +134,7 @@ class AssetInstallerTest extends TestCase
         $installer = $this->createInstaller();
         $installer->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
@@ -151,7 +153,7 @@ class AssetInstallerTest extends TestCase
         $installer = $this->createInstaller();
         $installer->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
@@ -170,7 +172,7 @@ class AssetInstallerTest extends TestCase
         $installer = $this->createInstaller();
         $installer->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         $gitIgnoreFile = vfsStream::url('project/public/.gitignore');
         $this->assertFileExists($gitIgnoreFile, 'public/.gitignore was not created');
@@ -205,7 +207,7 @@ class AssetInstallerTest extends TestCase
         $installer = $this->createInstaller();
         $installer->setProjectPath(vfsStream::url('project'));
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         $gitIgnoreContents = file_get_contents($gitIgnoreFile);
         $gitIgnoreContents = explode("\n", $gitIgnoreContents);
@@ -241,7 +243,7 @@ class AssetInstallerTest extends TestCase
             )
             ->shouldBeCalled();
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
@@ -283,7 +285,7 @@ class AssetInstallerTest extends TestCase
             ->writeError(Argument::any())
             ->shouldNotBeCalled();
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
@@ -306,7 +308,7 @@ class AssetInstallerTest extends TestCase
             ->writeError(Argument::any())
             ->shouldNotBeCalled();
 
-        $this->assertNull($installer($this->event->reveal()));
+        $this->assertNull($installer($this->package->reveal()));
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
