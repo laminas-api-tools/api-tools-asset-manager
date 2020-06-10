@@ -151,4 +151,12 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $uninstall = new AssetUninstaller($this->composer, $this->io);
         $uninstall($initialPackage);
     }
+
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+    }
 }
