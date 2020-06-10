@@ -9,8 +9,8 @@
 namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
-use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
+use Composer\Package\PackageInterface;
 use DirectoryIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -56,16 +56,15 @@ class AssetInstaller
     }
 
     /**
-     * @param PackageEvent $event
+     * @param PackageInterface $package
      */
-    public function __invoke(PackageEvent $event)
+    public function __invoke(PackageInterface $package)
     {
         $publicPath = sprintf('%s/public', $this->projectPath);
         if (! is_dir($publicPath)) {
             return;
         }
 
-        $package = $event->getOperation()->getPackage();
         $installer = $this->composer->getInstallationManager();
         $packagePath = $installer->getInstallPath($package);
 

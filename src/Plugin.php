@@ -10,8 +10,8 @@ namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
-use Composer\DependencyResolver\Operation\OperationInterface;
 use Composer\DependencyResolver\Operation\UninstallOperation;
+use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
@@ -82,10 +82,15 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function onPostPackageInstall(PackageEvent $event)
     {
-        $installer = new AssetInstaller($this->composer, $this->io);
-        $this->installers[] = function () use ($event) {
+        $operation = $event->getOperation();
+        if (! $operation instanceof InstallOperation) {
+            return;
+        }
+
+        $package = $operation->getPackage();
+        $this->installers[] = function () use ($package) {
             $installer = new AssetInstaller($this->composer, $this->io);
-            $installer($event);
+            $installer($package);
         };
     }
 
@@ -99,15 +104,16 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function onPostPackageUpdate(PackageEvent $event)
     {
         $operation = $event->getOperation();
+        if (! $operation instanceof UpdateOperation) {
+            return;
+        }
+
         $targetPackage = $operation->getTargetPackage();
 
         // Install new assets; delay until post-autoload-dump
-        $this->installers[] = function () use ($event, $operation, $targetPackage) {
+        $this->installers[] = function () use ($targetPackage) {
             $installer = new AssetInstaller($this->composer, $this->io);
-            $installer($this->createPackageEventWithOperation(
-                $event,
-                new InstallOperation($targetPackage, $operation->getReason())
-            ));
+            $installer($targetPackage);
         };
     }
 
@@ -118,8 +124,13 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     public function onPrePackageUninstall(PackageEvent $event)
     {
+        $operation = $event->getOperation();
+        if (! $operation instanceof UninstallOperation) {
+            return;
+        }
+
         $uninstall = new AssetUninstaller($this->composer, $this->io);
-        $uninstall($event);
+        $uninstall($operation->getPackage());
     }
 
     /**
@@ -130,36 +141,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function onPrePackageUpdate(PackageEvent $event)
     {
         $operation = $event->getOperation();
+        if (! $operation instanceof UpdateOperation) {
+            return;
+        }
+
         $initialPackage = $operation->getInitialPackage();
 
         // Uninstall any previously installed assets
         $uninstall = new AssetUninstaller($this->composer, $this->io);
-        $uninstall($this->createPackageEventWithOperation(
-            $event,
-            new UninstallOperation($initialPackage, $operation->getReason())
-        ));
-    }
-
-    /**
-     * Creates and returns a new PackageEvent with the given operation.
-     *
-     * @param PackageEvent $event
-     * @param OperationInterface $operation
-     * @return PackageEvent
-     */
-    private function createPackageEventWithOperation(PackageEvent $event, OperationInterface $operation)
-    {
-        return new PackageEvent(
-            $event->getName(),
-            $this->composer,
-            $this->io,
-            $event->isDevMode(),
-            $event->getPolicy(),
-            $event->getPool(),
-            $event->getInstalledRepo(),
-            $event->getRequest(),
-            $event->getOperations(),
-            $operation
-        );
+        $uninstall($initialPackage);
     }
 }
