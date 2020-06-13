@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Changed
 
-- Nothing.
+- [#5](https://github.com/laminas-api-tools/api-tools-asset-manager/pull/5) `AssetInstaller` and `AssetUninstaller` now consume composers `PackageInterface` instead of `PackageEvent` 
 
 ### Deprecated
 
