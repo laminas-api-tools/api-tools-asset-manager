@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## 1.3.0 - TBD
+## 1.3.0 - 2020-07-01
 
 ### Added
 
@@ -11,28 +11,6 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Changed
 
 - [#5](https://github.com/laminas-api-tools/api-tools-asset-manager/pull/5) `AssetInstaller` and `AssetUninstaller` now consume Composer's `PackageInterface` instead of `PackageEvent`.
-
-### Deprecated
-
-- Nothing.
-
-### Removed
-
-- Nothing.
-
-### Fixed
-
-- Nothing.
-
-## 1.2.1 - TBD
-
-### Added
-
-- Nothing.
-
-### Changed
-
-- Nothing.
 
 ### Deprecated
 
