@@ -9,15 +9,18 @@
 namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\OperationInterface;
 use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\Installer\InstallationManager;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Composer\Plugin\PluginInterface;
 use Laminas\ApiTools\AssetManager\AssetUninstaller;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class AssetUninstallerTest extends TestCase
 {
@@ -381,5 +384,44 @@ class AssetUninstallerTest extends TestCase
             $path = vfsStream::url('project/', $asset);
             $this->assertFileExists($path, sprintf('Expected file "%s"; file not found!', $path));
         }
+    }
+
+    public function testUninstallerCanHandlePackageEventDuringMigration()
+    {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+            $this->markTestSkipped(
+                'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
+            );
+        }
+
+        vfsStream::newDirectory('public')->at($this->filesystem);
+        $this->createAssets();
+
+        $uninstaller = $this->createUninstaller();
+        $uninstaller->setProjectPath(vfsStream::url('project'));
+
+        $operation = $this->prophesize(UninstallOperation::class);
+        $operation
+            ->getPackage()
+            ->willReturn($this->package->reveal())
+            ->shouldBeCalled();
+
+        $packageEvent = $this->createPackageEvent($operation->reveal());
+
+        $this->assertNull($uninstaller($packageEvent->reveal()));
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
+    private function createPackageEvent(OperationInterface $operation)
+    {
+        $event = $this->prophesize(PackageEvent::class);
+        $event
+            ->getOperation()
+            ->willReturn($operation)
+            ->shouldBeCalled();
+
+        return $event;
     }
 }

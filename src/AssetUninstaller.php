@@ -9,6 +9,8 @@
 namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\UninstallOperation;
+use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use DirectoryIterator;
@@ -61,7 +63,7 @@ class AssetUninstaller
     /**
      * @param PackageInterface $package
      */
-    public function __invoke(PackageInterface $package)
+    public function __invoke(/*PackageInterface*/ $package)
     {
         $publicPath = sprintf('%s/public', $this->projectPath);
         if (! is_dir($publicPath)) {
@@ -74,6 +76,8 @@ class AssetUninstaller
             // No .gitignore rules; nothing to remove
             return;
         }
+
+        $package = $this->package($package);
 
         $installer = $this->composer->getInstallationManager();
         $packagePath = $installer->getInstallPath($package);
@@ -190,5 +194,25 @@ class AssetUninstaller
     {
         $text = file_get_contents($file);
         return preg_split("/(\r\n|\r|\n)/", $text);
+    }
+
+    /**
+     * @param PackageInterface $package
+     *
+     * @return PackageInterface
+     * @deprecated Can be removed with next major.
+     *             Migration guide should suggest upgrading to latest minor before upgrading major
+     */
+    private function package($package)
+    {
+        if ($package instanceof PackageInterface) {
+            return $package;
+        }
+
+        assert($package instanceof PackageEvent);
+        $operation = $package->getOperation();
+        assert($operation instanceof UninstallOperation);
+
+        return $operation->getPackage();
     }
 }

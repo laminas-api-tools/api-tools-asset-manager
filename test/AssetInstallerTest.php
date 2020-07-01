@@ -10,14 +10,19 @@ namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\OperationInterface;
+use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Installer\InstallationManager;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Composer\Plugin\PluginInterface;
 use Laminas\ApiTools\AssetManager\AssetInstaller;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use function version_compare;
 
 class AssetInstallerTest extends TestCase
 {
@@ -314,5 +319,83 @@ class AssetInstallerTest extends TestCase
             $path = vfsStream::url('project/public/' . $asset);
             $this->assertFileNotExists($path, sprintf('File %s discovered, when it should not exist', $path));
         }
+    }
+
+    public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration()
+    {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+            $this->markTestSkipped(
+                'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
+            );
+        }
+
+        vfsStream::newDirectory('public')->at($this->filesystem);
+
+        vfsStream::newFile('vendor/org/package/config/module.config.php')
+            ->at($this->filesystem)
+            ->setContent("<?php\nreturn [\n    'some-key' => AssetInstaller::class,\n    'asset-manager' => []];");
+
+        $installer = $this->createInstaller();
+        $installer->setProjectPath(vfsStream::url('project'));
+
+        $this->io
+            ->writeError(Argument::any())
+            ->shouldNotBeCalled();
+
+        $operation = $this->prophesize(InstallOperation::class);
+        $operation
+            ->getPackage()
+            ->willReturn($this->package->reveal())
+            ->shouldBeCalled();
+
+        $packageEvent = $this->createPackageEvent($operation->reveal());
+
+        $this->assertNull($installer($packageEvent->reveal()));
+    }
+
+    public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration()
+    {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+            $this->markTestSkipped(
+                'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
+            );
+        }
+
+        vfsStream::newDirectory('public')->at($this->filesystem);
+
+        vfsStream::newFile('vendor/org/package/config/module.config.php')
+            ->at($this->filesystem)
+            ->setContent("<?php\nreturn [\n    'some-key' => AssetInstaller::class,\n    'asset-manager' => []];");
+
+        $installer = $this->createInstaller();
+        $installer->setProjectPath(vfsStream::url('project'));
+
+        $this->io
+            ->writeError(Argument::any())
+            ->shouldNotBeCalled();
+
+        $operation = $this->prophesize(UpdateOperation::class);
+        $operation
+            ->getTargetPackage()
+            ->willReturn($this->package->reveal())
+            ->shouldBeCalled();
+
+        $packageEvent = $this->createPackageEvent($operation->reveal());
+
+        $this->assertNull($installer($packageEvent->reveal()));
+    }
+
+    /**
+     * @return ObjectProphecy
+     */
+    private function createPackageEvent(OperationInterface $operation)
+    {
+        $event = $this->prophesize(PackageEvent::class);
+        $event
+            ->getOperation()
+            ->willReturn($operation)
+            ->shouldBeCalled();
+
+        return $event;
     }
 }

@@ -9,6 +9,9 @@
 namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UpdateOperation;
+use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use DirectoryIterator;
@@ -58,12 +61,14 @@ class AssetInstaller
     /**
      * @param PackageInterface $package
      */
-    public function __invoke(PackageInterface $package)
+    public function __invoke(/*PackageInterface*/ $package)
     {
         $publicPath = sprintf('%s/public', $this->projectPath);
         if (! is_dir($publicPath)) {
             return;
         }
+
+        $package = $this->package($package);
 
         $installer = $this->composer->getInstallationManager();
         $packagePath = $installer->getInstallPath($package);
@@ -182,5 +187,29 @@ class AssetInstaller
         $lines[] = $path;
 
         file_put_contents($gitignoreFile, implode("\n", $lines));
+    }
+
+    /**
+     * @param PackageInterface $package
+     *
+     * @return PackageInterface
+     * @deprecated Can be removed with next major.
+     *             Migration guide should suggest upgrading to latest minor before upgrading major
+     */
+    private function package($package)
+    {
+        if ($package instanceof PackageInterface) {
+            return $package;
+        }
+
+        assert($package instanceof PackageEvent);
+        $operation = $package->getOperation();
+
+        if ($operation instanceof UpdateOperation) {
+            return $operation->getTargetPackage();
+        }
+
+        assert($operation instanceof InstallOperation);
+        return $operation->getPackage();
     }
 }
