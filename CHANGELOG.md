@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ### Fixed
 
-- [#7](https://github.com/laminas-api-tools/api-tools-asset-manager/pull/7) Fixes issues during migration from 1.2.0
+- [#7](https://github.com/laminas-api-tools/api-tools-asset-manager/pull/7) fixes installation issues when upgrading from 1.2.0
 
 ## 1.3.0 - 2020-07-01
 
