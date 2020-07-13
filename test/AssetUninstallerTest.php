@@ -386,6 +386,9 @@ class AssetUninstallerTest extends TestCase
         }
     }
 
+    /**
+     * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
+     */
     public function testUninstallerCanHandlePackageEventDuringMigration()
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
@@ -412,6 +415,7 @@ class AssetUninstallerTest extends TestCase
     }
 
     /**
+     * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
      * @return ObjectProphecy
      */
     private function createPackageEvent(OperationInterface $operation)

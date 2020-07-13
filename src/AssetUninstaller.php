@@ -61,6 +61,7 @@ class AssetUninstaller
     }
 
     /**
+     * @todo Add explicit typehint for version 2.0.
      * @param PackageInterface $package
      */
     public function __invoke(/*PackageInterface*/ $package)
@@ -198,10 +199,9 @@ class AssetUninstaller
 
     /**
      * @param PackageInterface $package
-     *
      * @return PackageInterface
-     * @deprecated Can be removed with next major.
-     *             Migration guide should suggest upgrading to latest minor before upgrading major
+     * @deprecated Can be removed with next major. Migration guide should
+     *     suggest upgrading to latest minor before upgrading major.
      */
     private function package($package)
     {

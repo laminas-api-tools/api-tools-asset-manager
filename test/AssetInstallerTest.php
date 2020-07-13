@@ -321,6 +321,9 @@ class AssetInstallerTest extends TestCase
         }
     }
 
+    /**
+     * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
+     */
     public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration()
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
@@ -353,6 +356,9 @@ class AssetInstallerTest extends TestCase
         $this->assertNull($installer($packageEvent->reveal()));
     }
 
+    /**
+     * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
+     */
     public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration()
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
@@ -386,6 +392,7 @@ class AssetInstallerTest extends TestCase
     }
 
     /**
+     * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
      * @return ObjectProphecy
      */
     private function createPackageEvent(OperationInterface $operation)
