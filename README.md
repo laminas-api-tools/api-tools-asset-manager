@@ -1,7 +1,7 @@
 # api-tools-asset-manager
 
-[![Build Status](https://travis-ci.com/laminas-api-tools/api-tools-asset-manager.png)](https://travis-ci.com/laminas-api-tools/api-tools-asset-manager)
-
+[![Build Status](https://github.com/laminas-api-tools/api-tools-asset-manager/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/laminas-api-tools/api-tools-asset-manager/actions/workflows/continuous-integration.yml)
+``
 api-tools-asset-manager is a composer plugin that will copy configured web-accessible
 assets into the public document root of your Laminas application. It uses
 the configuration format of [rwoverdijk/AssetManager](https://github.com/rwoverdijk/AssetManager),
