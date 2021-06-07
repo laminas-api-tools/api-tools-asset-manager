@@ -47,6 +47,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Activate the plugin
+     *
+     * @return void
      */
     public function activate(Composer $composer, IOInterface $io)
     {
@@ -56,6 +58,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Execute all installers.
+     *
+     * @return void
      */
     public function onPostAutoloadDump()
     {
@@ -67,6 +71,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Memoize an installer for the package being installed.
+     *
+     * @return void
      */
     public function onPostPackageInstall(PackageEvent $event)
     {
@@ -76,7 +82,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         }
 
         $package            = $operation->getPackage();
-        $this->installers[] = function () use ($package) {
+        $this->installers[] = function () use ($package): void {
             $installer = new AssetInstaller($this->composer, $this->io);
             $installer($package);
         };
@@ -86,6 +92,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * Installs assets for a package being updated.
      *
      * Memoizes an install operation to run post-autoload-dump.
+     *
+     * @return void
      */
     public function onPostPackageUpdate(PackageEvent $event)
     {
@@ -97,7 +105,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $targetPackage = $operation->getTargetPackage();
 
         // Install new assets; delay until post-autoload-dump
-        $this->installers[] = function () use ($targetPackage) {
+        $this->installers[] = function () use ($targetPackage): void {
             $installer = new AssetInstaller($this->composer, $this->io);
             $installer($targetPackage);
         };
@@ -105,6 +113,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Uninstall assets provided by the package, if any.
+     *
+     * @return void
      */
     public function onPrePackageUninstall(PackageEvent $event)
     {
@@ -119,6 +129,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Removes previously installed assets for a package being updated.
+     *
+     * @return void
      */
     public function onPrePackageUpdate(PackageEvent $event)
     {
@@ -134,10 +146,16 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $uninstall($initialPackage);
     }
 
+    /**
+     * @return void
+     */
     public function deactivate(Composer $composer, IOInterface $io)
     {
     }
 
+    /**
+     * @return void
+     */
     public function uninstall(Composer $composer, IOInterface $io)
     {
     }

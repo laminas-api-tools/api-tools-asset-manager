@@ -53,6 +53,7 @@ class AssetUninstaller
      * Allow overriding the project path (primarily for testing).
      *
      * @param string $path
+     * @return void
      */
     public function setProjectPath($path)
     {
@@ -128,7 +129,7 @@ class AssetUninstaller
      * @param string $path Path containing asset directories
      * @param string $publicPath Public directory/document root of project
      */
-    private function removeAssets($path, $publicPath)
+    private function removeAssets($path, $publicPath): void
     {
         if (! is_dir($path)) {
             return;

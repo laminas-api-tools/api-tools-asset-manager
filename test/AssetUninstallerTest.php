@@ -15,6 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 use function file_get_contents;
@@ -26,6 +27,8 @@ use function version_compare;
 
 class AssetUninstallerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var string[] */
     protected $installedAssets = [
         'public/api-tools/css/styles.css',
@@ -87,7 +90,7 @@ class AssetUninstallerTest extends TestCase
     /** @var IOInterface|ObjectProphecy */
     private $io;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Create virtual filesystem
         $this->filesystem = vfsStream::setup('project');
@@ -139,7 +142,7 @@ class AssetUninstallerTest extends TestCase
         ];
     }
 
-    public function testUninstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot()
+    public function testUninstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot(): void
     {
         $composer = $this->prophesize(Composer::class);
         $composer->getInstallationManager()->shouldNotBeCalled();
@@ -154,7 +157,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertNull($uninstaller($package->reveal()));
     }
 
-    public function testUninstallerAbortsIfNoPublicGitignoreFileFound()
+    public function testUninstallerAbortsIfNoPublicGitignoreFileFound(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -172,7 +175,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertNull($uninstaller($package->reveal()));
     }
 
-    public function testUninstallerAbortsIfPackageDoesNotHaveConfiguration()
+    public function testUninstallerAbortsIfPackageDoesNotHaveConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -188,7 +191,7 @@ class AssetUninstallerTest extends TestCase
         }
     }
 
-    public function testUninstallerAbortsIfConfigurationDoesNotContainAssetInformation()
+    public function testUninstallerAbortsIfConfigurationDoesNotContainAssetInformation(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -208,7 +211,7 @@ class AssetUninstallerTest extends TestCase
         }
     }
 
-    public function testUninstallerAbortsIfConfiguredAssetsAreNotPresentInDocroot()
+    public function testUninstallerAbortsIfConfiguredAssetsAreNotPresentInDocroot(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -233,7 +236,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertEquals($gitignore, $test);
     }
 
-    public function testUninstallerRemovesAssetsFromDocumentRootBasedOnConfiguration()
+    public function testUninstallerRemovesAssetsFromDocumentRootBasedOnConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -257,14 +260,14 @@ class AssetUninstallerTest extends TestCase
 
         foreach ($this->installedAssets as $asset) {
             $path = sprintf('%s/%s', vfsStream::url('project'), $asset);
-            $this->assertFileNotExists($path, sprintf('File "%s" exists when it should have been removed', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File "%s" exists when it should have been removed', $path));
         }
 
         $test = file_get_contents(vfsStream::url('project/public/.gitignore'));
-        $this->assertRegexp('/^\s*$/s', $test);
+        $this->assertMatchesRegularExpression('/^\s*$/s', $test);
     }
 
-    public function testUninstallerDoesNotRemoveAssetsFromDocumentRootIfGitignoreEntryIsMissing()
+    public function testUninstallerDoesNotRemoveAssetsFromDocumentRootIfGitignoreEntryIsMissing(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -298,7 +301,7 @@ class AssetUninstallerTest extends TestCase
                 case preg_match('#/api-tools-foobar/#', $asset):
                     // fall-through
                 default:
-                    $this->assertFileNotExists(
+                    $this->assertFileDoesNotExist(
                         $path,
                         sprintf('File "%s" exists when it should have been removed', $path)
                     );
@@ -322,7 +325,7 @@ class AssetUninstallerTest extends TestCase
     /**
      * @dataProvider problematicConfiguration
      */
-    public function testUninstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile)
+    public function testUninstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -366,7 +369,7 @@ class AssetUninstallerTest extends TestCase
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
      */
-    public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile)
+    public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -388,9 +391,9 @@ class AssetUninstallerTest extends TestCase
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
      */
-    public function testUninstallerCanHandlePackageEventDuringMigration()
+    public function testUninstallerCanHandlePackageEventDuringMigration(): void
     {
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', '>=')) {
             $this->markTestSkipped(
                 'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
             );

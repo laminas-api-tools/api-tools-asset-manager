@@ -16,6 +16,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 use function array_unique;
@@ -27,6 +28,8 @@ use function version_compare;
 
 class AssetInstallerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var string[] */
     protected $expectedAssets = [
         'api-tools/css/styles.css',
@@ -49,7 +52,7 @@ class AssetInstallerTest extends TestCase
     /** @var vfsStreamDirectory */
     private $filesystem;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Create virtual filesystem
         $this->filesystem = vfsStream::setup('project');
@@ -94,7 +97,7 @@ class AssetInstallerTest extends TestCase
         ];
     }
 
-    public function testInstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot()
+    public function testInstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot(): void
     {
         $composer = $this->prophesize(Composer::class);
         $composer->getInstallationManager()->shouldNotBeCalled();
@@ -110,7 +113,7 @@ class AssetInstallerTest extends TestCase
         $this->assertNull($installer($package->reveal()));
     }
 
-    public function testInstallerAbortsIfPackageDoesNotHaveConfiguration()
+    public function testInstallerAbortsIfPackageDoesNotHaveConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -121,11 +124,11 @@ class AssetInstallerTest extends TestCase
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
-            $this->assertFileNotExists($path, sprintf('File %s discovered, when it should not exist', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File %s discovered, when it should not exist', $path));
         }
     }
 
-    public function testInstallerAbortsIfConfigurationDoesNotContainAssetInformation()
+    public function testInstallerAbortsIfConfigurationDoesNotContainAssetInformation(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -140,11 +143,11 @@ class AssetInstallerTest extends TestCase
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
-            $this->assertFileNotExists($path, sprintf('File %s discovered, when it should not exist', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File %s discovered, when it should not exist', $path));
         }
     }
 
-    public function testInstallerCopiesAssetsToDocumentRootBasedOnConfiguration()
+    public function testInstallerCopiesAssetsToDocumentRootBasedOnConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -163,7 +166,7 @@ class AssetInstallerTest extends TestCase
         }
     }
 
-    public function testInstallerUpdatesPublicGitIgnoreFileWithEntryForEachAssetDirectoryItCopies()
+    public function testInstallerUpdatesPublicGitIgnoreFileWithEntryForEachAssetDirectoryItCopies(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -179,20 +182,24 @@ class AssetInstallerTest extends TestCase
         $gitIgnoreFile = vfsStream::url('project/public/.gitignore');
         $this->assertFileExists($gitIgnoreFile, 'public/.gitignore was not created');
         $contents = file_get_contents($gitIgnoreFile);
-        $this->assertContains("\napi-tools", $contents, 'public/.gitignore is missing the api-tools/ entry');
-        $this->assertContains(
+        $this->assertStringContainsString(
+            "\napi-tools",
+            $contents,
+            'public/.gitignore is missing the api-tools/ entry'
+        );
+        $this->assertStringContainsString(
             "\napi-tools-barbaz/",
             $contents,
             'public/.gitignore is missing the api-tools-barbaz/ entry'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "\napi-tools-foobar/",
             $contents,
             'public/.gitignore is missing the api-tools-foobar/ entry'
         );
     }
 
-    public function testInstallerDoesNotAddDuplicateEntriesToGitignore()
+    public function testInstallerDoesNotAddDuplicateEntriesToGitignore(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -228,7 +235,7 @@ class AssetInstallerTest extends TestCase
     /**
      * @dataProvider problematicConfiguration
      */
-    public function testInstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile)
+    public function testInstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -249,7 +256,7 @@ class AssetInstallerTest extends TestCase
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
-            $this->assertFileNotExists($path, sprintf('File %s discovered, when it should not exist', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File %s discovered, when it should not exist', $path));
         }
     }
 
@@ -272,7 +279,7 @@ class AssetInstallerTest extends TestCase
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
      */
-    public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile)
+    public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -291,11 +298,11 @@ class AssetInstallerTest extends TestCase
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
-            $this->assertFileNotExists($path, sprintf('File %s discovered, when it should not exist', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File %s discovered, when it should not exist', $path));
         }
     }
 
-    public function testInstallerAllowsConfigurationContainingClassPseudoConstant()
+    public function testInstallerAllowsConfigurationContainingClassPseudoConstant(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -314,16 +321,16 @@ class AssetInstallerTest extends TestCase
 
         foreach ($this->expectedAssets as $asset) {
             $path = vfsStream::url('project/public/' . $asset);
-            $this->assertFileNotExists($path, sprintf('File %s discovered, when it should not exist', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File %s discovered, when it should not exist', $path));
         }
     }
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
      */
-    public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration()
+    public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration(): void
     {
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', '>=')) {
             $this->markTestSkipped(
                 'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
             );
@@ -356,9 +363,9 @@ class AssetInstallerTest extends TestCase
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
      */
-    public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration()
+    public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration(): void
     {
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', '>=')) {
             $this->markTestSkipped(
                 'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
             );
