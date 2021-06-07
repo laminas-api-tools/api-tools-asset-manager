@@ -19,15 +19,17 @@
         "class": "Laminas\\ApiTools\\AssetManager\\Plugin"
     },
     "require": {
-        "php": "^7.3",
+        "php": "^7.3 || ~8.0.0",
         "composer-plugin-api": "^1.1 || ^2.0",
         "laminas/laminas-zendframework-bridge": "^1.0"
     },
     "require-dev": {
-        "composer/composer": "^1.4.1 || ^2.0@dev",
+        "composer/composer": "^1.4.1 || ^2.0",
         "laminas/laminas-coding-standard": "~2.2.0",
         "mikey179/vfsstream": "^1.6.7",
-        "phpunit/phpunit": "^5.7.23 || ^6.4.3"
+        "phpunit/phpunit": "^9.5",
+        "psalm/plugin-phpunit": "^0.16.0",
+        "vimeo/psalm": "^4.7"
     },
     "autoload": {
         "psr-4": {
