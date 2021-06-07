@@ -15,6 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 use function file_get_contents;
@@ -26,6 +27,8 @@ use function version_compare;
 
 class AssetUninstallerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /** @var string[] */
     protected $installedAssets = [
         'public/api-tools/css/styles.css',
@@ -87,7 +90,7 @@ class AssetUninstallerTest extends TestCase
     /** @var IOInterface|ObjectProphecy */
     private $io;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Create virtual filesystem
         $this->filesystem = vfsStream::setup('project');
@@ -257,11 +260,11 @@ class AssetUninstallerTest extends TestCase
 
         foreach ($this->installedAssets as $asset) {
             $path = sprintf('%s/%s', vfsStream::url('project'), $asset);
-            $this->assertFileNotExists($path, sprintf('File "%s" exists when it should have been removed', $path));
+            $this->assertFileDoesNotExist($path, sprintf('File "%s" exists when it should have been removed', $path));
         }
 
         $test = file_get_contents(vfsStream::url('project/public/.gitignore'));
-        $this->assertRegexp('/^\s*$/s', $test);
+        $this->assertMatchesRegularExpression('/^\s*$/s', $test);
     }
 
     public function testUninstallerDoesNotRemoveAssetsFromDocumentRootIfGitignoreEntryIsMissing()
@@ -298,7 +301,7 @@ class AssetUninstallerTest extends TestCase
                 case preg_match('#/api-tools-foobar/#', $asset):
                     // fall-through
                 default:
-                    $this->assertFileNotExists(
+                    $this->assertFileDoesNotExist(
                         $path,
                         sprintf('File "%s" exists when it should have been removed', $path)
                     );

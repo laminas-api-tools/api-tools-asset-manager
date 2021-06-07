@@ -13,11 +13,15 @@ use Laminas\ApiTools\AssetManager\Plugin;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionProperty;
 
 class PluginTest extends TestCase
 {
+    use DeprecatedAssertionsTrait;
+    use ProphecyTrait;
+
     /** @var vfsStreamDirectory */
     private $filesystem;
 
@@ -27,7 +31,7 @@ class PluginTest extends TestCase
     /** @var IOInterface|ObjectProphecy */
     private $io;
 
-    public function setUp()
+    public function setUp(): void
     {
         // Create virtual filesystem
         $this->filesystem = vfsStream::setup('project');

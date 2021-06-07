@@ -27,6 +27,7 @@
         "composer/composer": "^1.4.1 || ^2.0",
         "laminas/laminas-coding-standard": "~2.2.0",
         "mikey179/vfsstream": "^1.6.7",
+        "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.16.0",
         "vimeo/psalm": "^4.7"
