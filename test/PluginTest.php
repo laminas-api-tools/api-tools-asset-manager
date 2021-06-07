@@ -40,7 +40,7 @@ class PluginTest extends TestCase
         $this->io       = $this->prophesize(IOInterface::class);
     }
 
-    public function testSubscribesToExpectedEvents()
+    public function testSubscribesToExpectedEvents(): void
     {
         $this->assertEquals([
             'post-autoload-dump'    => 'onPostAutoloadDump',
@@ -51,7 +51,7 @@ class PluginTest extends TestCase
         ], Plugin::getSubscribedEvents());
     }
 
-    public function testPostPackageInstallShouldMemoizeInstallerCallback()
+    public function testPostPackageInstallShouldMemoizeInstallerCallback(): void
     {
         $plugin = new Plugin();
         $this->assertNull($plugin->activate($this->composer->reveal(), $this->io->reveal()));
@@ -66,7 +66,7 @@ class PluginTest extends TestCase
         $this->assertAttributeCount(1, 'installers', $plugin);
     }
 
-    public function testPrePackageUninstallShouldTriggerAssetUninstaller()
+    public function testPrePackageUninstallShouldTriggerAssetUninstaller(): void
     {
         $plugin = new Plugin();
         $this->assertNull($plugin->activate($this->composer->reveal(), $this->io->reveal()));
@@ -75,7 +75,7 @@ class PluginTest extends TestCase
         $this->assertNull($plugin->onPrePackageUninstall($uninstallEvent));
     }
 
-    public function testPreUpdateOperationShouldTriggerAssetUninstaller()
+    public function testPreUpdateOperationShouldTriggerAssetUninstaller(): void
     {
         $plugin = new Plugin();
         $this->assertNull($plugin->activate($this->composer->reveal(), $this->io->reveal()));
@@ -85,7 +85,7 @@ class PluginTest extends TestCase
         $this->assertAttributeCount(0, 'installers', $plugin);
     }
 
-    public function testPostUpdateOperationShouldMemoizeInstallOperation()
+    public function testPostUpdateOperationShouldMemoizeInstallOperation(): void
     {
         $plugin = new Plugin();
         $this->assertNull($plugin->activate($this->composer->reveal(), $this->io->reveal()));
@@ -95,14 +95,14 @@ class PluginTest extends TestCase
         $this->assertAttributeCount(1, 'installers', $plugin);
     }
 
-    public function testOnPostAutoloadDumpTriggersInstallers()
+    public function testOnPostAutoloadDumpTriggersInstallers(): void
     {
         $spy = (object) ['operations' => []];
 
-        $installer1 = function () use ($spy) {
+        $installer1 = function () use ($spy): void {
             $spy->operations[] = 'installer1';
         };
-        $installer2 = function () use ($spy) {
+        $installer2 = function () use ($spy): void {
             $spy->operations[] = 'installer2';
         };
 

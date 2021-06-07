@@ -97,7 +97,7 @@ class AssetInstallerTest extends TestCase
         ];
     }
 
-    public function testInstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot()
+    public function testInstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot(): void
     {
         $composer = $this->prophesize(Composer::class);
         $composer->getInstallationManager()->shouldNotBeCalled();
@@ -113,7 +113,7 @@ class AssetInstallerTest extends TestCase
         $this->assertNull($installer($package->reveal()));
     }
 
-    public function testInstallerAbortsIfPackageDoesNotHaveConfiguration()
+    public function testInstallerAbortsIfPackageDoesNotHaveConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -128,7 +128,7 @@ class AssetInstallerTest extends TestCase
         }
     }
 
-    public function testInstallerAbortsIfConfigurationDoesNotContainAssetInformation()
+    public function testInstallerAbortsIfConfigurationDoesNotContainAssetInformation(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -147,7 +147,7 @@ class AssetInstallerTest extends TestCase
         }
     }
 
-    public function testInstallerCopiesAssetsToDocumentRootBasedOnConfiguration()
+    public function testInstallerCopiesAssetsToDocumentRootBasedOnConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -166,7 +166,7 @@ class AssetInstallerTest extends TestCase
         }
     }
 
-    public function testInstallerUpdatesPublicGitIgnoreFileWithEntryForEachAssetDirectoryItCopies()
+    public function testInstallerUpdatesPublicGitIgnoreFileWithEntryForEachAssetDirectoryItCopies(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -195,7 +195,7 @@ class AssetInstallerTest extends TestCase
         );
     }
 
-    public function testInstallerDoesNotAddDuplicateEntriesToGitignore()
+    public function testInstallerDoesNotAddDuplicateEntriesToGitignore(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -230,8 +230,10 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @dataProvider problematicConfiguration
+     *
+     * @return void
      */
-    public function testInstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile)
+    public function testInstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -274,8 +276,10 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
+     *
+     * @return void
      */
-    public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile)
+    public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -298,7 +302,7 @@ class AssetInstallerTest extends TestCase
         }
     }
 
-    public function testInstallerAllowsConfigurationContainingClassPseudoConstant()
+    public function testInstallerAllowsConfigurationContainingClassPseudoConstant(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -323,8 +327,10 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
+     *
+     * @return void
      */
-    public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration()
+    public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration(): void
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
             $this->markTestSkipped(
@@ -358,8 +364,10 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
+     *
+     * @return void
      */
-    public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration()
+    public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration(): void
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
             $this->markTestSkipped(

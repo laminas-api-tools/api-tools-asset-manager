@@ -142,7 +142,7 @@ class AssetUninstallerTest extends TestCase
         ];
     }
 
-    public function testUninstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot()
+    public function testUninstallerAbortsIfNoPublicSubdirIsPresentInProjectRoot(): void
     {
         $composer = $this->prophesize(Composer::class);
         $composer->getInstallationManager()->shouldNotBeCalled();
@@ -157,7 +157,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertNull($uninstaller($package->reveal()));
     }
 
-    public function testUninstallerAbortsIfNoPublicGitignoreFileFound()
+    public function testUninstallerAbortsIfNoPublicGitignoreFileFound(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -175,7 +175,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertNull($uninstaller($package->reveal()));
     }
 
-    public function testUninstallerAbortsIfPackageDoesNotHaveConfiguration()
+    public function testUninstallerAbortsIfPackageDoesNotHaveConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -191,7 +191,7 @@ class AssetUninstallerTest extends TestCase
         }
     }
 
-    public function testUninstallerAbortsIfConfigurationDoesNotContainAssetInformation()
+    public function testUninstallerAbortsIfConfigurationDoesNotContainAssetInformation(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -211,7 +211,7 @@ class AssetUninstallerTest extends TestCase
         }
     }
 
-    public function testUninstallerAbortsIfConfiguredAssetsAreNotPresentInDocroot()
+    public function testUninstallerAbortsIfConfiguredAssetsAreNotPresentInDocroot(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -236,7 +236,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertEquals($gitignore, $test);
     }
 
-    public function testUninstallerRemovesAssetsFromDocumentRootBasedOnConfiguration()
+    public function testUninstallerRemovesAssetsFromDocumentRootBasedOnConfiguration(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -267,7 +267,7 @@ class AssetUninstallerTest extends TestCase
         $this->assertMatchesRegularExpression('/^\s*$/s', $test);
     }
 
-    public function testUninstallerDoesNotRemoveAssetsFromDocumentRootIfGitignoreEntryIsMissing()
+    public function testUninstallerDoesNotRemoveAssetsFromDocumentRootIfGitignoreEntryIsMissing(): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
         $this->createAssets();
@@ -324,8 +324,10 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @dataProvider problematicConfiguration
+     *
+     * @return void
      */
-    public function testUninstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile)
+    public function testUninstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -368,8 +370,10 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
+     *
+     * @return void
      */
-    public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile)
+    public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile): void
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -390,8 +394,10 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
+     *
+     * @return void
      */
-    public function testUninstallerCanHandlePackageEventDuringMigration()
+    public function testUninstallerCanHandlePackageEventDuringMigration(): void
     {
         if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
             $this->markTestSkipped(

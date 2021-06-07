@@ -54,6 +54,7 @@ class AssetInstaller
      * Allow overriding the project path (primarily for testing).
      *
      * @param string $path
+     * @return void
      */
     public function setProjectPath($path)
     {
@@ -116,7 +117,7 @@ class AssetInstaller
      * @param string $path Path containing asset directories
      * @param string $publicPath Public directory/document root of project
      */
-    private function copyAssets($path, $publicPath)
+    private function copyAssets($path, $publicPath): void
     {
         if (! is_dir($path)) {
             return;
@@ -145,7 +146,7 @@ class AssetInstaller
      * @param string $source Path containing source files.
      * @param string $destination Path to which to copy files.
      */
-    private function copy($source, $destination)
+    private function copy($source, $destination): void
     {
         $trimLength = strlen(dirname($source)) + 1;
         $rdi        = new RecursiveDirectoryIterator($source);
@@ -172,7 +173,7 @@ class AssetInstaller
      * @param string $gitignoreFile
      * @param string $path
      */
-    private function updateGitignore($gitignoreFile, $path)
+    private function updateGitignore($gitignoreFile, $path): void
     {
         $gitignoreContents = file_exists($gitignoreFile)
             ? file_get_contents($gitignoreFile)
