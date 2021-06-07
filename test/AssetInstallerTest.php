@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
- */
-
 namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
@@ -19,13 +13,21 @@ use Composer\Package\PackageInterface;
 use Composer\Plugin\PluginInterface;
 use Laminas\ApiTools\AssetManager\AssetInstaller;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+
+use function array_unique;
+use function explode;
+use function file_get_contents;
+use function sprintf;
+use function var_export;
 use function version_compare;
 
 class AssetInstallerTest extends TestCase
 {
+    /** @var array */
     protected $expectedAssets = [
         'api-tools/css/styles.css',
         'api-tools/img/favicon.ico',
@@ -38,19 +40,13 @@ class AssetInstallerTest extends TestCase
         'api-tools-foobar/styles/styles.css',
     ];
 
-    /**
-     * @var PackageInterface|\Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var PackageInterface|ObjectProphecy */
     private $package;
 
-    /**
-     * @var IOInterface|\Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var IOInterface|ObjectProphecy */
     private $io;
 
-    /**
-     * @var \org\bovigo\vfs\vfsStreamDirectory
-     */
+    /** @var vfsStreamDirectory */
     private $filesystem;
 
     public function setUp()
@@ -59,7 +55,7 @@ class AssetInstallerTest extends TestCase
         $this->filesystem = vfsStream::setup('project');
     }
 
-    public function createInstaller()
+    public function createInstaller(): AssetInstaller
     {
         $this->package = $this->prophesize(PackageInterface::class);
 
@@ -83,7 +79,7 @@ class AssetInstallerTest extends TestCase
         );
     }
 
-    public function getValidConfig()
+    public function getValidConfig(): array
     {
         return [
             'asset_manager' => [
@@ -219,7 +215,8 @@ class AssetInstallerTest extends TestCase
         $this->assertEquals(array_unique($gitIgnoreContents), $gitIgnoreContents);
     }
 
-    public function problematicConfiguration()
+    /** @psalm-return array<string, array{0: string}> */
+    public function problematicConfiguration(): array
     {
         return [
             'eval' => [__DIR__ . '/TestAsset/problematic-configs/eval.config.php'],
@@ -229,9 +226,8 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @dataProvider problematicConfiguration
-     * @param string $configFile
      */
-    public function testInstallerSkipsConfigFilesUsingProblematicConstructs($configFile)
+    public function testInstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile)
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -256,7 +252,8 @@ class AssetInstallerTest extends TestCase
         }
     }
 
-    public function configFilesWithoutAssetManagerConfiguration()
+    /** @psalm-return array<string, array{0: string}> */
+    public function configFilesWithoutAssetManagerConfiguration(): array
     {
         return [
             'class'        => [__DIR__ . '/TestAsset/no-asset-manager-configs/class.config.php'],
@@ -273,9 +270,8 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
-     * @param string $configFile
      */
-    public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString($configFile)
+    public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile)
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
@@ -17,11 +11,12 @@ use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 
+use function array_shift;
+use function count;
+
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    /**
-     * @var Composer
-     */
+    /** @var Composer */
     private $composer;
 
     /**
@@ -31,9 +26,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      */
     private $installers = [];
 
-    /**
-     * @var IOInterface
-     */
+    /** @var IOInterface */
     private $io;
 
     /**
@@ -54,14 +47,11 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Activate the plugin
-     *
-     * @param Composer $composer
-     * @param IOInterface $io
      */
     public function activate(Composer $composer, IOInterface $io)
     {
         $this->composer = $composer;
-        $this->io = $io;
+        $this->io       = $io;
     }
 
     /**
@@ -77,8 +67,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Memoize an installer for the package being installed.
-     *
-     * @param PackageEvent $event
      */
     public function onPostPackageInstall(PackageEvent $event)
     {
@@ -87,7 +75,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             return;
         }
 
-        $package = $operation->getPackage();
+        $package            = $operation->getPackage();
         $this->installers[] = function () use ($package) {
             $installer = new AssetInstaller($this->composer, $this->io);
             $installer($package);
@@ -98,8 +86,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * Installs assets for a package being updated.
      *
      * Memoizes an install operation to run post-autoload-dump.
-     *
-     * @param PackageEvent $event
      */
     public function onPostPackageUpdate(PackageEvent $event)
     {
@@ -119,8 +105,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Uninstall assets provided by the package, if any.
-     *
-     * @param PackageEvent $event
      */
     public function onPrePackageUninstall(PackageEvent $event)
     {
@@ -135,8 +119,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Removes previously installed assets for a package being updated.
-     *
-     * @param PackageEvent $event
      */
     public function onPrePackageUpdate(PackageEvent $event)
     {
