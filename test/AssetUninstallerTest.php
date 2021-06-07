@@ -26,7 +26,7 @@ use function version_compare;
 
 class AssetUninstallerTest extends TestCase
 {
-    /** @var array */
+    /** @var string[] */
     protected $installedAssets = [
         'public/api-tools/css/styles.css',
         'public/api-tools/img/favicon.ico',
@@ -39,7 +39,7 @@ class AssetUninstallerTest extends TestCase
         'public/api-tools-foobar/styles/styles.css',
     ];
 
-    /** @var array  */
+    /** @var array<string, array<string, array<array<string, array<string, string>>>>> */
     protected $structure = [
         'public' => [
             'api-tools'        => [
@@ -124,7 +124,8 @@ class AssetUninstallerTest extends TestCase
         );
     }
 
-    public function getValidConfig(): array
+    /** @return array<string, array<string, array<string, string[]>>> */
+    public function getValidConfig()
     {
         return [
             'asset_manager' => [

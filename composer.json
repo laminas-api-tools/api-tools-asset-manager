@@ -5,12 +5,12 @@
     "license": "BSD-3-Clause",
     "homepage": "https://api-tools.getlaminas.org",
     "support": {
-        "docs": "https://api-tools.getlaminas.org/documentation",
         "issues": "https://github.com/laminas-api-tools/api-tools-asset-manager/issues",
-        "source": "https://github.com/laminas-api-tools/api-tools-asset-manager",
-        "rss": "https://github.com/laminas-api-tools/api-tools-asset-manager/releases.atom",
+        "forum": "https://discourse.laminas.dev",
         "chat": "https://laminas.dev/chat",
-        "forum": "https://discourse.laminas.dev"
+        "source": "https://github.com/laminas-api-tools/api-tools-asset-manager",
+        "docs": "https://api-tools.getlaminas.org/documentation",
+        "rss": "https://github.com/laminas-api-tools/api-tools-asset-manager/releases.atom"
     },
     "config": {
         "sort-packages": true
@@ -44,11 +44,11 @@
             "@cs-check",
             "@test"
         ],
-        "upload-coverage": "coveralls -v",
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v"
     },
     "replace": {
         "zfcampus/zf-asset-manager": "^1.2.0"

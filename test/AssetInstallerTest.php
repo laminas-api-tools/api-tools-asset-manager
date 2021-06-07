@@ -27,7 +27,7 @@ use function version_compare;
 
 class AssetInstallerTest extends TestCase
 {
-    /** @var array */
+    /** @var string[] */
     protected $expectedAssets = [
         'api-tools/css/styles.css',
         'api-tools/img/favicon.ico',
@@ -79,6 +79,7 @@ class AssetInstallerTest extends TestCase
         );
     }
 
+    /** @return array<string, array<string, array<string, string[]>>> */
     public function getValidConfig(): array
     {
         return [
