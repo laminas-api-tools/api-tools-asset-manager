@@ -167,7 +167,6 @@ class AssetUninstaller
      * Recursively remove a tree
      *
      * @param string $tree Filesystem tree to recursively delete
-     * @return bool
      */
     private function remove($tree): bool
     {
