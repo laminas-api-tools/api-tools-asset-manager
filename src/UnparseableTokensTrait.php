@@ -1,12 +1,15 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ApiTools\AssetManager;
+
+use function file_get_contents;
+use function in_array;
+use function is_array;
+use function preg_match;
+use function token_get_all;
+
+use const T_EVAL;
+use const T_EXIT;
 
 trait UnparseableTokensTrait
 {
@@ -41,7 +44,7 @@ trait UnparseableTokensTrait
     private function isParseableContent($packageConfigPath)
     {
         $contents = file_get_contents($packageConfigPath);
-        $tokens = token_get_all($contents);
+        $tokens   = token_get_all($contents);
         foreach ($tokens as $index => $token) {
             if (! is_array($token)) {
                 continue;

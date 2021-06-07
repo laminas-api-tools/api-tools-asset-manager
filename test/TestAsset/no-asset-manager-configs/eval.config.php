@@ -1,4 +1,4 @@
-<?php // @codingStandardsIgnoreFile
+<?php // phpcs:disable
 
 return [
     'unknown-key' => eval('<?php phpinfo();'),

@@ -1,46 +1,30 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
- */
-
 namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
-use Composer\DependencyResolver\PolicyInterface;
-use Composer\DependencyResolver\Pool;
-use Composer\DependencyResolver\Request;
 use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
-use Composer\Repository\CompositeRepository;
 use Laminas\ApiTools\AssetManager\Plugin;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use ReflectionProperty;
 
 class PluginTest extends TestCase
 {
-
-    /**
-     * @var vfsStreamDirectory
-     */
+    /** @var vfsStreamDirectory */
     private $filesystem;
 
-    /**
-     * @var Composer|\Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var Composer|ObjectProphecy */
     private $composer;
 
-    /**
-     * @var IOInterface|\Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var IOInterface|ObjectProphecy */
     private $io;
 
     public function setUp()
@@ -49,7 +33,7 @@ class PluginTest extends TestCase
         $this->filesystem = vfsStream::setup('project');
 
         $this->composer = $this->prophesize(Composer::class);
-        $this->io = $this->prophesize(IOInterface::class);
+        $this->io       = $this->prophesize(IOInterface::class);
     }
 
     public function testSubscribesToExpectedEvents()
@@ -69,8 +53,8 @@ class PluginTest extends TestCase
         $this->assertNull($plugin->activate($this->composer->reveal(), $this->io->reveal()));
 
         $installEvent = $this->prophesize(PackageEvent::class);
-        $operation = $this->prophesize(InstallOperation::class);
-        $package = $this->prophesize(PackageInterface::class);
+        $operation    = $this->prophesize(InstallOperation::class);
+        $package      = $this->prophesize(PackageInterface::class);
         $operation->getPackage()->will([$package, 'reveal'])->shouldBeCalled();
 
         $installEvent->getOperation()->will([$operation, 'reveal'])->shouldBeCalled();
@@ -134,11 +118,11 @@ class PluginTest extends TestCase
         $this->assertSame($expected, $spy->operations);
     }
 
-    private function mockUninstallEvent()
+    private function mockUninstallEvent(): PackageEvent
     {
         vfsStream::newFile('public/.gitignore')->at($this->filesystem);
 
-        $event = $this->prophesize(PackageEvent::class);
+        $event     = $this->prophesize(PackageEvent::class);
         $operation = $this->prophesize(UninstallOperation::class);
         $event->getOperation()->willReturn($operation)->shouldBeCalled();
         $package = $this->prophesize(PackageInterface::class);
@@ -147,7 +131,7 @@ class PluginTest extends TestCase
         return $event->reveal();
     }
 
-    private function mockPostUpdateEvent()
+    private function mockPostUpdateEvent(): PackageEvent
     {
         $targetPackage = $this->prophesize(PackageInterface::class);
 
@@ -164,7 +148,7 @@ class PluginTest extends TestCase
         return $event->reveal();
     }
 
-    private function mockPreUpdateEvent()
+    private function mockPreUpdateEvent(): PackageEvent
     {
         $initialPackage = $this->prophesize(PackageInterface::class);
 

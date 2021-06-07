@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
- */
-
 namespace LaminasTest\ApiTools\AssetManager;
 
 use Composer\Composer;
@@ -18,12 +12,21 @@ use Composer\Package\PackageInterface;
 use Composer\Plugin\PluginInterface;
 use Laminas\ApiTools\AssetManager\AssetUninstaller;
 use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
+use function file_get_contents;
+use function file_put_contents;
+use function preg_match;
+use function sprintf;
+use function var_export;
+use function version_compare;
+
 class AssetUninstallerTest extends TestCase
 {
+    /** @var array */
     protected $installedAssets = [
         'public/api-tools/css/styles.css',
         'public/api-tools/img/favicon.ico',
@@ -36,16 +39,17 @@ class AssetUninstallerTest extends TestCase
         'public/api-tools-foobar/styles/styles.css',
     ];
 
+    /** @var array  */
     protected $structure = [
         'public' => [
-            'api-tools' => [
+            'api-tools'        => [
                 'css' => [
                     'styles.css' => '',
                 ],
                 'img' => [
                     'favicon.ico' => '',
                 ],
-                'js' => [
+                'js'  => [
                     'scripts.js' => '',
                 ],
             ],
@@ -56,37 +60,31 @@ class AssetUninstallerTest extends TestCase
                 'img' => [
                     'favicon.ico' => '',
                 ],
-                'js' => [
+                'js'  => [
                     'scripts.js' => '',
                 ],
             ],
             'api-tools-foobar' => [
-                'images' => [
+                'images'  => [
                     'favicon.ico' => '',
                 ],
                 'scripts' => [
                     'scripts.js' => '',
                 ],
-                'styles' => [
+                'styles'  => [
                     'styles.css' => '',
                 ],
             ],
         ],
     ];
 
-    /**
-     * @var \org\bovigo\vfs\vfsStreamDirectory
-     */
+    /** @var vfsStreamDirectory */
     private $filesystem;
 
-    /**
-     * @var PackageInterface|\Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var PackageInterface|ObjectProphecy */
     private $package;
 
-    /**
-     * @var IOInterface|\Prophecy\Prophecy\ObjectProphecy
-     */
+    /** @var IOInterface|ObjectProphecy */
     private $io;
 
     public function setUp()
@@ -95,12 +93,12 @@ class AssetUninstallerTest extends TestCase
         $this->filesystem = vfsStream::setup('project');
     }
 
-    public function createAssets()
+    public function createAssets(): void
     {
         vfsStream::create($this->structure);
     }
 
-    public function createUninstaller()
+    public function createUninstaller(): AssetUninstaller
     {
         vfsStream::newFile('public/.gitignore')->at($this->filesystem);
 
@@ -126,7 +124,7 @@ class AssetUninstallerTest extends TestCase
         );
     }
 
-    public function getValidConfig()
+    public function getValidConfig(): array
     {
         return [
             'asset_manager' => [
@@ -311,7 +309,8 @@ class AssetUninstallerTest extends TestCase
         $this->assertEmpty($test);
     }
 
-    public function problematicConfiguration()
+    /** @psalm-return array<string, array{0: string}> */
+    public function problematicConfiguration(): array
     {
         return [
             'eval' => [__DIR__ . '/TestAsset/problematic-configs/eval.config.php'],
@@ -321,9 +320,8 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @dataProvider problematicConfiguration
-     * @param string $configFile
      */
-    public function testUninstallerSkipsConfigFilesUsingProblematicConstructs($configFile)
+    public function testUninstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile)
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 
@@ -348,7 +346,8 @@ class AssetUninstallerTest extends TestCase
         }
     }
 
-    public function configFilesWithoutAssetManagerConfiguration()
+    /** @psalm-return array<string, array{0: string}> */
+    public function configFilesWithoutAssetManagerConfiguration(): array
     {
         return [
             'class'        => [__DIR__ . '/TestAsset/no-asset-manager-configs/class.config.php'],
@@ -365,9 +364,8 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
-     * @param string $configFile
      */
-    public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString($configFile)
+    public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile)
     {
         vfsStream::newDirectory('public')->at($this->filesystem);
 

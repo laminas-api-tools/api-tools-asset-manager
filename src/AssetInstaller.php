@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-asset-manager for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-asset-manager/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
@@ -18,33 +12,41 @@ use DirectoryIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
+use function array_search;
+use function assert;
+use function copy;
+use function dirname;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function getcwd;
+use function implode;
+use function in_array;
+use function is_array;
+use function is_dir;
+use function mkdir;
+use function preg_split;
+use function sprintf;
+use function strlen;
+use function substr;
+
 class AssetInstaller
 {
     use UnparseableTokensTrait;
 
-    /**
-     * @var Composer
-     */
+    /** @var Composer */
     private $composer;
 
-    /**
-     * @var IOInterface
-     */
+    /** @var IOInterface */
     private $io;
 
-    /**
-     * @var string Base path for project; default is current working dir.
-     */
+    /** @var string Base path for project; default is current working dir. */
     private $projectPath;
 
-    /**
-     * @param Composer $composer
-     * @param IOInterface $io
-     */
     public function __construct(Composer $composer, IOInterface $io)
     {
-        $this->composer = $composer;
-        $this->io = $io;
+        $this->composer    = $composer;
+        $this->io          = $io;
         $this->projectPath = getcwd();
     }
 
@@ -62,7 +64,7 @@ class AssetInstaller
      * @todo Add explicit typehint for version 2.0.
      * @param PackageInterface $package
      */
-    public function __invoke(/*PackageInterface*/ $package)
+    public function __invoke($package) /*PackageInterface*/
     {
         $publicPath = sprintf('%s/public', $this->projectPath);
         if (! is_dir($publicPath)) {
@@ -71,7 +73,7 @@ class AssetInstaller
 
         $package = $this->package($package);
 
-        $installer = $this->composer->getInstallationManager();
+        $installer   = $this->composer->getInstallationManager();
         $packagePath = $installer->getInstallPath($package);
 
         $packageConfigPath = sprintf('%s/config/module.config.php', $packagePath);
@@ -93,7 +95,8 @@ class AssetInstaller
         }
 
         $packageConfig = include $packageConfigPath;
-        if (! is_array($packageConfig)
+        if (
+            ! is_array($packageConfig)
             || ! isset($packageConfig['asset_manager']['resolver_configs']['paths'])
             || ! is_array($packageConfig['asset_manager']['resolver_configs']['paths'])
         ) {
@@ -179,7 +182,7 @@ class AssetInstaller
             return;
         }
 
-        $path = sprintf("%s/", $path);
+        $path  = sprintf("%s/", $path);
         $lines = preg_split("/(\r\n?|\n)/", $gitignoreContents);
         if (false !== array_search($path, $lines)) {
             return;
@@ -191,10 +194,11 @@ class AssetInstaller
     }
 
     /**
-     * @param PackageInterface $package
-     * @return PackageInterface
      * @deprecated Can be removed with next major. Migration guide should
      *     suggest upgrading to latest minor before upgrading major.
+     *
+     * @param PackageInterface $package
+     * @return PackageInterface
      */
     private function package($package)
     {
