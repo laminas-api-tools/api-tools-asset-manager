@@ -324,8 +324,6 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @dataProvider problematicConfiguration
-     *
-     * @return void
      */
     public function testUninstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile): void
     {
@@ -370,8 +368,6 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
-     *
-     * @return void
      */
     public function testUninstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile): void
     {
@@ -394,12 +390,10 @@ class AssetUninstallerTest extends TestCase
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
-     *
-     * @return void
      */
     public function testUninstallerCanHandlePackageEventDuringMigration(): void
     {
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', '>=')) {
             $this->markTestSkipped(
                 'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
             );

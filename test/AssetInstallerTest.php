@@ -182,7 +182,11 @@ class AssetInstallerTest extends TestCase
         $gitIgnoreFile = vfsStream::url('project/public/.gitignore');
         $this->assertFileExists($gitIgnoreFile, 'public/.gitignore was not created');
         $contents = file_get_contents($gitIgnoreFile);
-        $this->assertStringContainsString("\napi-tools", $contents, 'public/.gitignore is missing the api-tools/ entry');
+        $this->assertStringContainsString(
+            "\napi-tools",
+            $contents,
+            'public/.gitignore is missing the api-tools/ entry'
+        );
         $this->assertStringContainsString(
             "\napi-tools-barbaz/",
             $contents,
@@ -230,8 +234,6 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @dataProvider problematicConfiguration
-     *
-     * @return void
      */
     public function testInstallerSkipsConfigFilesUsingProblematicConstructs(string $configFile): void
     {
@@ -276,8 +278,6 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @dataProvider configFilesWithoutAssetManagerConfiguration
-     *
-     * @return void
      */
     public function testInstallerSkipsConfigFilesThatDoNotContainAssetManagerString(string $configFile): void
     {
@@ -327,12 +327,10 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
-     *
-     * @return void
      */
     public function testInstallerCanHandlePackageEventWithInstallOperationDuringMigration(): void
     {
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', '>=')) {
             $this->markTestSkipped(
                 'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
             );
@@ -364,12 +362,10 @@ class AssetInstallerTest extends TestCase
 
     /**
      * @todo Remove for version 2.0, when support for Composer 1.0 is removed.
-     *
-     * @return void
      */
     public function testInstallerCanHandlePackageEventWithUpdateOperationDuringMigration(): void
     {
-        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', 'gte')) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2.0', '>=')) {
             $this->markTestSkipped(
                 'No need to test on composer 2.0 as this is only related to migration 1.2 => 1.3'
             );
