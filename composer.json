@@ -19,12 +19,12 @@
         "class": "Laminas\\ApiTools\\AssetManager\\Plugin"
     },
     "require": {
-        "php": "^7.3 || ~8.0.0",
+        "php": "^7.3 || ~8.0.0 || ~8.1.0",
         "composer-plugin-api": "^1.1 || ^2.0",
         "laminas/laminas-zendframework-bridge": "^1.0"
     },
     "require-dev": {
-        "composer/composer": "^1.4.1 || ^2.0",
+        "composer/composer": "^1.4.1 || ^2.1.9",
         "laminas/laminas-coding-standard": "~2.2.0",
         "mikey179/vfsstream": "^1.6.7",
         "phpspec/prophecy-phpunit": "^2.0",
@@ -51,7 +51,8 @@
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "upload-coverage": "coveralls -v"
+        "upload-coverage": "coveralls -v",
+        "static-analysis": "psalm --shepherd --stats"
     },
     "replace": {
         "zfcampus/zf-asset-manager": "^1.2.0"

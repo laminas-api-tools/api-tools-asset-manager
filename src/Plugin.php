@@ -32,7 +32,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Provide composer event listeners.
      *
-     * @return array
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {

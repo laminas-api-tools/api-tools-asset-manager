@@ -1,5 +1,5 @@
 <?php // phpcs:disable
 
-interface Failure
+interface FailureInterface
 {
 }
