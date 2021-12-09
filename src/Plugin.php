@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\ApiTools\AssetManager;
 
 use Composer\Composer;
@@ -32,7 +34,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Provide composer event listeners.
      *
-     * @return array
+     * {@inheritDoc}
      */
     public static function getSubscribedEvents()
     {

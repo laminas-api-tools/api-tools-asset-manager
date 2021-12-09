@@ -70,10 +70,6 @@
       <code>Argument::any()</code>
       <code>Argument::containingString('Unable to check for asset configuration in')</code>
     </ImplicitToStringCast>
-    <InvalidArgument occurrences="2">
-      <code>'gte'</code>
-      <code>'gte'</code>
-    </InvalidArgument>
     <MixedArgument occurrences="10">
       <code>$packageEvent-&gt;reveal()</code>
       <code>$packageEvent-&gt;reveal()</code>
@@ -86,13 +82,13 @@
       <code>$this-&gt;package-&gt;reveal()</code>
       <code>$this-&gt;package-&gt;reveal()</code>
     </MixedArgument>
-    <MixedMethodCall occurrences="5">
+    <PossiblyNullReference occurrences="5">
       <code>shouldBeCalled</code>
       <code>shouldNotBeCalled</code>
       <code>shouldNotBeCalled</code>
       <code>shouldNotBeCalled</code>
       <code>shouldNotBeCalled</code>
-    </MixedMethodCall>
+    </PossiblyNullReference>
     <PossiblyUndefinedMethod occurrences="10">
       <code>reveal</code>
       <code>reveal</code>
@@ -110,9 +106,6 @@
     <ImplicitToStringCast occurrences="1">
       <code>Argument::containingString('Unable to check for asset configuration in')</code>
     </ImplicitToStringCast>
-    <InvalidArgument occurrences="1">
-      <code>'gte'</code>
-    </InvalidArgument>
     <InvalidPropertyAssignmentValue occurrences="1"/>
     <MixedArgument occurrences="8">
       <code>$packageEvent-&gt;reveal()</code>
@@ -124,9 +117,9 @@
       <code>$this-&gt;package-&gt;reveal()</code>
       <code>$this-&gt;package-&gt;reveal()</code>
     </MixedArgument>
-    <MixedMethodCall occurrences="1">
+    <PossiblyNullReference occurrences="1">
       <code>shouldBeCalled</code>
-    </MixedMethodCall>
+    </PossiblyNullReference>
     <PossiblyUndefinedMethod occurrences="8">
       <code>reveal</code>
       <code>reveal</code>
@@ -178,11 +171,6 @@
       <code>reveal</code>
     </PossiblyUndefinedMethod>
   </file>
-  <file src="test/TestAsset/no-asset-manager-configs/class.config.php">
-    <DuplicateClass occurrences="1">
-      <code>Failure</code>
-    </DuplicateClass>
-  </file>
   <file src="test/TestAsset/no-asset-manager-configs/clone.config.php">
     <InvalidScope occurrences="1">
       <code>$this</code>
@@ -192,10 +180,5 @@
     <UndefinedClass occurrences="1">
       <code>\Some\Namespaced\Item</code>
     </UndefinedClass>
-  </file>
-  <file src="test/TestAsset/no-asset-manager-configs/trait.config.php">
-    <DuplicateClass occurrences="1">
-      <code>Failure</code>
-    </DuplicateClass>
   </file>
 </files>
