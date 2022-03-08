@@ -17,8 +17,8 @@
 > One team member has a Ukrainian relative who fled her home with her son. The train was delayed due to bombing on the road ahead. We have friends who are hiding in bomb shelters. We anxiously follow up on them after the air raids, which indiscriminately fire at hospitals, schools, kindergartens and houses. We're not taking this from any media. These are our actual experiences.
 > 
 > You trust us enough to use our software. We ask that you trust us to say the truth on this. We need your help. Go out and protest this unnecessary war. Stop the bloodshed. Say "stop the war!"
-``
-api-tools-asset-manager is a composer plugin that will copy configured web-accessible
+
+`api-tools-asset-manager` is a composer plugin that will copy configured web-accessible
 assets into the public document root of your Laminas application. It uses
 the configuration format of [rwoverdijk/AssetManager](https://github.com/rwoverdijk/AssetManager),
 and specifically the subset:
