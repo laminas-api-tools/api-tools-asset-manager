@@ -121,6 +121,7 @@ class PluginTest extends TestCase
 
         $this->assertNull($plugin->onPostAutoloadDump());
 
+        /** @psalm-suppress TypeDoesNotContainType */
         $this->assertSame($expected, $spy->operations);
     }
 

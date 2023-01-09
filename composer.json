@@ -13,13 +13,19 @@
         "rss": "https://github.com/laminas-api-tools/api-tools-asset-manager/releases.atom"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "8.0.99"
+        },
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
         "class": "Laminas\\ApiTools\\AssetManager\\Plugin"
     },
     "require": {
-        "php": "^7.3 || ~8.0.0 || ~8.1.0",
+        "php": "~8.0.0 || ~8.1.0 || ~8.2.0",
         "composer-plugin-api": "^1.1 || ^2.0",
         "laminas/laminas-zendframework-bridge": "^1.0"
     },
@@ -28,9 +34,9 @@
         "laminas/laminas-coding-standard": "~2.3.0",
         "mikey179/vfsstream": "^1.6.10",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5.10",
-        "psalm/plugin-phpunit": "^0.16.0",
-        "vimeo/psalm": "^4.7"
+        "phpunit/phpunit": "^9.5.27",
+        "psalm/plugin-phpunit": "^0.16.1",
+        "vimeo/psalm": "^4.30"
     },
     "autoload": {
         "psr-4": {
