@@ -83,8 +83,7 @@ class AssetUninstallerTest extends TestCase
         ],
     ];
 
-    /** @var vfsStreamDirectory */
-    private $filesystem;
+    private vfsStreamDirectory $filesystem;
 
     /** @var PackageInterface|ObjectProphecy */
     private $package;
