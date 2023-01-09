@@ -104,12 +104,14 @@ class AssetUninstaller
             return;
         }
 
-        /** @psalm-var array{asset_manager: array{resolver_configs: array{paths: string[]}}} */
         $packageConfig = include $packageConfigPath;
 
-        /** @psalm-suppress DocblockTypeContradiction */
         if (
             ! is_array($packageConfig)
+            || ! isset($packageConfig['asset_manager'])
+            || ! is_array($packageConfig['asset_manager'])
+            || ! isset($packageConfig['asset_manager']['resolver_configs'])
+            || ! is_array($packageConfig['asset_manager']['resolver_configs'])
             || ! isset($packageConfig['asset_manager']['resolver_configs']['paths'])
             || ! is_array($packageConfig['asset_manager']['resolver_configs']['paths'])
         ) {
@@ -119,6 +121,7 @@ class AssetUninstaller
 
         $this->gitignore = $this->fetchIgnoreRules($gitignoreFile);
 
+        /** @psalm-var string[] */
         $paths = $packageConfig['asset_manager']['resolver_configs']['paths'];
 
         foreach ($paths as $path) {
