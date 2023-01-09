@@ -99,6 +99,7 @@ class PluginTest extends TestCase
 
     public function testOnPostAutoloadDumpTriggersInstallers(): void
     {
+        /** @psalm-var object{operations: array<array-key,string>} $obj */
         $spy = (object) ['operations' => []];
 
         $installer1 = function () use ($spy): void {
@@ -114,6 +115,7 @@ class PluginTest extends TestCase
         $r->setAccessible(true);
         $r->setValue($plugin, [$installer1, $installer2]);
 
+        /** @psalm-var array<array-key,string> */
         $expected = [
             'installer1',
             'installer2',

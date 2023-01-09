@@ -35,8 +35,8 @@ class AssetUninstaller
     /** @var Composer */
     private $composer;
 
-    /** @var array .gitignore rules */
-    private $gitignore;
+    /** @var string[] .gitignore rules */
+    private $gitignore = [];
 
     /** @var IOInterface */
     private $io;
@@ -105,8 +105,13 @@ class AssetUninstaller
         }
 
         $packageConfig = include $packageConfigPath;
+
         if (
             ! is_array($packageConfig)
+            || ! isset($packageConfig['asset_manager'])
+            || ! is_array($packageConfig['asset_manager'])
+            || ! isset($packageConfig['asset_manager']['resolver_configs'])
+            || ! is_array($packageConfig['asset_manager']['resolver_configs'])
             || ! isset($packageConfig['asset_manager']['resolver_configs']['paths'])
             || ! is_array($packageConfig['asset_manager']['resolver_configs']['paths'])
         ) {
@@ -116,6 +121,7 @@ class AssetUninstaller
 
         $this->gitignore = $this->fetchIgnoreRules($gitignoreFile);
 
+        /** @psalm-var string[] */
         $paths = $packageConfig['asset_manager']['resolver_configs']['paths'];
 
         foreach ($paths as $path) {
@@ -173,6 +179,7 @@ class AssetUninstaller
      */
     private function remove($tree): bool
     {
+        /** @psalm-var string[] */
         $files = array_diff(scandir($tree), ['.', '..']);
 
         foreach ($files as $file) {
@@ -192,9 +199,9 @@ class AssetUninstaller
      * Retrieve and parse gitignore rules.
      *
      * @param string $file Filename of .gitignore file
-     * @return array Array of lines from the file
+     * @return string[] Array of lines from the file
      */
-    private function fetchIgnoreRules($file)
+    private function fetchIgnoreRules($file): array
     {
         $text = file_get_contents($file);
         return preg_split("/(\r\n|\r|\n)/", $text);
