@@ -18,18 +18,16 @@ use function count;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-    /** @var Composer */
-    private $composer;
+    private Composer $composer;
 
     /**
      * Array of installers to run following a dump-autoload operation.
      *
      * @var callable[]
      */
-    private $installers = [];
+    private array $installers = [];
 
-    /** @var IOInterface */
-    private $io;
+    private IOInterface $io;
 
     /**
      * Provide composer event listeners.

@@ -51,8 +51,7 @@ class AssetInstallerTest extends TestCase
     /** @var IOInterface|ObjectProphecy */
     private $io;
 
-    /** @var vfsStreamDirectory */
-    private $filesystem;
+    private vfsStreamDirectory $filesystem;
 
     public function setUp(): void
     {

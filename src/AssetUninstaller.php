@@ -32,22 +32,14 @@ class AssetUninstaller
 {
     use UnparseableTokensTrait;
 
-    /** @var Composer */
-    private $composer;
-
     /** @var string[] .gitignore rules */
-    private $gitignore = [];
-
-    /** @var IOInterface */
-    private $io;
+    private array $gitignore = [];
 
     /** @var string Base path for project; default is current working dir. */
     private $projectPath;
 
-    public function __construct(Composer $composer, IOInterface $io)
+    public function __construct(private Composer $composer, private IOInterface $io)
     {
-        $this->composer    = $composer;
-        $this->io          = $io;
         $this->projectPath = getcwd();
     }
 

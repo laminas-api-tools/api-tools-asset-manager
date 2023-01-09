@@ -24,8 +24,7 @@ class PluginTest extends TestCase
     use DeprecatedAssertionsTrait;
     use ProphecyTrait;
 
-    /** @var vfsStreamDirectory */
-    private $filesystem;
+    private vfsStreamDirectory $filesystem;
 
     /** @var Composer|ObjectProphecy */
     private $composer;
@@ -102,10 +101,10 @@ class PluginTest extends TestCase
         /** @psalm-var object{operations: array<array-key,string>} $obj */
         $spy = (object) ['operations' => []];
 
-        $installer1 = function () use ($spy): void {
+        $installer1 = static function () use ($spy): void {
             $spy->operations[] = 'installer1';
         };
-        $installer2 = function () use ($spy): void {
+        $installer2 = static function () use ($spy): void {
             $spy->operations[] = 'installer2';
         };
 
